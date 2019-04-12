@@ -1,0 +1,759 @@
+%%
+%% Copyright 2007, 2008, 2009 Elsevier Ltd
+%%
+%% This file is part of the 'Elsarticle Bundle'.
+%% ---------------------------------------------
+%%
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%%
+%% The list of all files belonging to the 'Elsarticle Bundle' is
+%% given in the file `manifest.txt'.
+%%
+
+%% Template article for Elsevier's document class `elsarticle'
+%% with numbered style bibliographic references
+%% SP 2008/03/01
+%%
+%%
+%%
+%% $Id: elsarticle-template-num.tex 4 2009-10-24 08:22:58Z rishi $
+%%
+%%
+\documentclass[preprint,12pt,1p]{elsarticle}
+
+%% Use the option review to obtain double line spacing
+%%\documentclass[preprint,review,12pt]{elsarticle}
+
+%% Use the options 1p,twocolumn; 3p; 3p,twocolumn; 5p; or 5p,twocolumn
+%% for a journal layout:
+%%\documentclass[final,1p,times]{elsarticle}
+%% \documentclass[final,1p,times,twocolumn]{elsarticle}
+%% \documentclass[final,3p,times]{elsarticle}
+%% \documentclass[final,3p,times,twocolumn]{elsarticle}
+%% \documentclass[final,5p,times]{elsarticle}
+%%\documentclass[final,5p,times,twocolumn]{elsarticle}
+
+%% if you use PostScript figures in your article
+%% use the graphics package for simple commands
+%% \usepackage{graphics}
+%% or use the graphicx package for more complicated commands
+%% \usepackage{graphicx}
+%% or use the epsfig package if you prefer to use the old commands
+%% \usepackage{epsfig}
+
+%% The amssymb package provides various useful mathematical symbols
+\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+ \usepackage{amsthm}
+ \usepackage{setspace}
+ \usepackage{graphicx}
+ \usepackage{listings}
+ \usepackage{color}
+  \usepackage{bbm}
+ \usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{subcaption}
+\usepackage{mwe}
+\usepackage{subfig}
+\usepackage{geometry}
+\geometry{ margin=1in}
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers after \end{frontmatter}.
+%% \usepackage{lineno}
+
+%% natbib.sty is loaded by default. However, natbib options can be
+%% provided with \biboptions{...} command. Following options are
+%% valid:
+
+%%   round  -  round parentheses are used (default)
+%%   square -  square brackets are used   [option]
+%%   curly  -  curly braces are used      {option}
+%%   angle  -  angle brackets are used    <option>
+%%   semicolon  -  multiple citations separated by semi-colon
+%%   colon  - same as semicolon, an earlier confusion
+%%   comma  -  separated by comma
+%%   numbers-  selects numerical citations
+%%   super  -  numerical citations as superscripts
+%%   sort   -  sorts multiple citations according to order in ref. list
+%%   sort&compress   -  like sort, but also compresses numerical citations
+%%   compress - compresses without sorting
+%%
+%% \biboptions{comma,round}
+
+% \biboptions{}
+
+
+
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{\textbf{American Option price and Greeks approximation}}
+
+
+
+\author{Chengjunyi Zheng}
+\author{Amir Oskoui}
+\author{Abhishek Sanghani}
+\author{Letian Wang}
+
+\begin{abstract}
+ $~~~~$ Whaley, Ju-Zhong did American Option pricing based on geometric Brownian motion. We further analyzed the Greeks value of their models, especially Vega. Greeks value under Ju-Zhong's model are very accurate, compared to true value done through 1000-step Binomial Tree. Error is less than 1\%. We also did American Option price approximation under Variance Gamma model. Main process of approximation is similar to that in Whaley \& Ju-Zhong Model. The American Option price is a summation of the European Option price and an early exercise premium. Our approximation captured greater than 98\% of true American Option put price implemented through finite difference method if we select $\epsilon = S_0/2000 \approx 0.7$
+\end{abstract}
+
+\begin{keyword}
+%% keywords here, in the form: keyword \sep keyword
+Variance Gamma, Greeks, Early exercise premium
+%% MSC codes here, in the form: \MSC code \sep code
+%% or \MSC[2008] code \sep code (2000 is the default)
+\end{keyword}
+
+\end{frontmatter}
+
+%%
+%% Start line numbering here if you want
+%%
+% \linenumbers
+
+%% main text
+\begin{spacing}{1.5}
+
+
+\section{Introduction}
+\label{sec1}
+Comparing to the European Option, the American Option is much harder to implement because of its path dependent property. Previously, we could only use simulation or numerical method to get its price. In the 1980's, Whaley$^{\textbf{[1]}}$ proposed analytical solution of American Option. This model performed well for short maturity and long maturity, but it didn't get an accurate price approximation for intermediate length maturity. Then in 1999 Ju-Zhong's$^{\textbf{[2]}}$ improvement on the model Whaley proposed, made American Option analytical price approximation accurate for a whole range of maturity. In Ju-Zhong's paper, it provided Greeks equation, but with several typos. We re-derived all equations in Whaley's paper, and got Greeks equations for Ju-Zhong and Whaley's methods respectively. \\ 
+$~~~~$Ju-Zhong and Whaley's approximation were both based on the assumption that stock follows geometric Brownian motion, which is a diffusion process with no jumps. In real market, there exists jumps. Variance Gamma model is a modification on geometric Brownian motion model. Madan and Carr $^{\textbf{[3]}}$ introduced a closed-form analytical solution of European Option price under Variance Gamma. Hirsa and Madan$^{\textbf{[4]}}$ used a finite difference method, getting American Option price under Variance Gamma. Finite difference method is very accurate for price approximation, but it is computationally expensive. We want to get an analytical approximation of American Option price under Variance Gamma using a similar structure as Ju-Zhong, where the American Option price is the summation of European Option price and early exercise premium.\\
+
+\section{Greeks approximation for Whaley \& Ju-Zhong American option pricing model}
+\label{sec2}
+In Appendix A, we re-derived equations in Whaley's paper, making its variable setting consistent with that in Ju-Zhong, and we derived the Greeks equations. In Appendix B, we've included all the Greeks' equations in Ju-Zhong's paper. We corrected several typos in Ju-Zhong's paper. Appendix C contains four tables with price, Delta, Gamma, Theta, Vega value under different $S_0, K, T, r, \delta$ combination. These parameters were consistent with Exhibit 3-6 in Ju-Zhong's paper.
+
+\subsection{Binomial Tree approximation}
+\label{subsec1}
+Binomial Tree was set as benchmark (True value) in Appendix C. In Ju-Zhong's paper, they used 10000-step binomial tree model to get true value of price. However, because of $\mathcal{O}(n^2)$ computational complexity, it takes very long time to calculate 10000-step binomial tree. Braunstein$^{\textbf{[5]}}$ proposed that the accuracy would be the same if we utilized the average of two trees, one with 1000 steps and one with 1001 steps. This process is significantly less burdensome, and prices more accurately than a single tree. For following paragraphs, $f^{(1000)}, f^{(1001)}$ were 1000-step and 1001-step binomial tree price, and $S^{(1000)}, S^{(1001)}$ were 1000-step and 1001-step stock price.\\
+Delta was calculated through central differences, $$\Delta = \frac{1}{2}(\frac{f^{(1000)}_{u}-f^{(1000)}_{d}}{S^{(1000)}_u - S^{(1000)}_d} + \frac{f^{(1001)}_{u}-f^{(1001)}_{d}}{S^{(1001)}_u - S^{(1001)}_d})$$
+Gamma was calculated through central differences. $\Delta^{(1000)}_1 = \frac{f^{(1000)}_{uu}-f^{(1000)}_{ud}}{S^{(1000)}_{uu} - S^{(1000)}}$, $\Delta^{(1000)}_2 = \frac{f^{(1000)}_{du}-f^{(1000)}_{dd}}{S^{(1000)} - S^{(1000)}_{dd}}$
+$$\Gamma^{(1000)} = \frac{\Delta^{(1000)}_1 - \Delta^{(1000)}_2 }{0.5(S^{(1000)}_{uu} - S^{(1000)}_{dd})}$$
+$$\Gamma = 0.5 (\Gamma^{(1000)} + \Gamma^{(1001)} )$$
+Theta was explicitly calculated, $$\Theta = \frac{1}{2}(\frac{f^{(1000)}_{ud} - f^{(1000)}}{2\Delta t} + \frac{f^{(1001)}_{ud} - f^{(1001)}}{2\Delta t})$$
+Vega was calculated through central differences, $$Vega = \frac{1}{2}(\frac{f^{(1000)}_{\sigma+\Delta \sigma} - f^{(1000)}_{\sigma - \Delta \sigma}}{2\Delta \sigma}+ \frac{f^{(1001)}_{\sigma+\Delta \sigma} - f^{(1001)}_{\sigma - \Delta \sigma}}{2\Delta \sigma})$$
+
+
+
+\subsection{Greeks calculation under Whaley American option pricing model}
+\label{subsec2}
+Greeks equations under Whaley's model are shown in Appendix A. In Appendix C, 'Quad' columns represent the results of Whaley's method. Whaley's method's Greeks approximation is very accurate for short maturity (Appendix C.1 \& C.2). However, $Vega$ approximation with intermediate length maturity shows around 5\% error. It explains reason for inaccurate price approximation of Whaley's method under intermediate maturity.
+
+\subsection{Greeks calculation under Ju-Zhong American option pricing model}
+\label{subsec3}
+Greeks equations under Whaley's model are shown in Appendix B. In Appendix C, 'Mquad' columns represent the results of Ju-Zhong method. Ju-Zhong's Greeks approximation is very accurate for the whole range of maturity (Appendix C.1 - C.4).
+
+\section{American option pricing under Variance Gamma}
+\label{sec3}
+PIDE of Variance Gamma model:
+$$\frac{\partial{w}}{\partial{\tau}}(x,\tau) + \frac{1}{2}\sigma^2(\epsilon)\frac{\partial^2{w}}{\partial{x^2}}(x,\tau) -\left( r - q + \omega(\epsilon) - \frac{1}{2}\sigma^2(\epsilon) \right)\frac{\partial{w}}{\partial{x}}(x,\tau) $$$$+rw(x,\tau) - \int_{|y| > \epsilon} \left(w(x+y,\tau) - w(x,\tau)\right)k(y)dy = 0 $$
+$~~~~$Jump part was split into two sub-parts. When $|y| < \epsilon$, the integral formed $\sigma^2(\epsilon)$. $|y| > \epsilon$ part remains integral form. \\
+
+\subsection{Approximation method}
+\label{subsec1}
+
+$\bullet$ First method: American Option under VG = European Option under VG + Early exercise premium (Calculated through Ju-Zhong model)\\
+$expint(\xi) = \int_{\xi}^{\infty} \frac{e^{-y}}{y} dy$\\[6pt]
+$ \sigma^2(\epsilon) = \int_{|y| < \epsilon} y^2 k(y)dy = \frac{1}{\nu \lambda^2_p}\left(1-e^{-\lambda_p\epsilon}(\lambda_p \epsilon+1)\right)+\frac{1}{\nu \lambda^2_n}\left(1-e^{-\lambda_n\epsilon}(\lambda_n \epsilon+1)\right)$\\[6pt]
+$\omega(\epsilon) = \int_{|y| > \epsilon} (1-e^y)k(y)dy =  \frac{1}{\nu}expint(\epsilon \lambda_p) -  \frac{1}{\nu}expint(\epsilon (\lambda_p -1) +  \frac{1}{\nu}expint(\epsilon \lambda_n) -  \frac{1}{\nu}expint(\epsilon (\lambda_n +1)$\\[6pt]
+$~~~~$ Ju-Zhong approximation was implemented for getting early exercise premium part of Black Scholes formula $$\frac{\partial V(S,\tau)}{\partial \tau} - [r-(q-\omega(\epsilon))]S\frac{\partial V(S,\tau)}{\partial S} - \frac{1}{2} \sigma^2(\epsilon)\frac{\partial^2 V(S,\tau)}{\partial S^2}  = -rV$$
+Approx1: AmerPrice = EuroVG + EarlyExercisePremium(by Ju-Zhong). $\epsilon = S_0/1000$\\
+Approx2: AmerPrice = EuroVG + EarlyExercisePremium(by Ju-Zhong). $\epsilon = S_0/2000$\\
+Approx3: AmerPrice = EuroVG + EarlyExercisePremium(by Ju-Zhong). $\epsilon = S_0/8000$\\
+
+$\bullet$ Second method: Fully using Ju-Zhong approximation (GBM) of American option pricing\\
+For Black Scholes formula $$\frac{\partial V(S,\tau)}{\partial \tau} - [r-(q-\omega(\epsilon))]S\frac{\partial V(S,\tau)}{\partial S} - \frac{1}{2} \sigma^2(\epsilon)\frac{\partial^2 V(S,\tau)}{\partial S^2}  = -rV$$
+$~~~~$ we didn't consider European Option price under Variance Gamma here. We used Ju-Zhong's method for getting American Option price of Black Scholes PDE shown above ('JZ-Approx' in Appendix C).\\
+
+
+\subsection{Result analysis}
+\label{subsec2}
+In Approx.D, there are four tables with parameter consistent with those in Table 3 of Hirsa and Madan's paper$^{\textbf{[4]}}$, parameter settings were the same as Table 1 in Hirsa and Madan's paper$^{\textbf{[4]}}$. Four tables in Appendix.D are all about American Put Option. For out-of-the money American Put Option, Variance Gamma model's price should be higher than that under Geometric Brownian motion. Jump leads to higher percent moneyness. However, for in the money American Put Option, jump may lead to lower percent moneyness. In Appendix D, 'JZ-Approx' under-estimated out of money American Option's prices under the Variance Gamma model, and over-priced them for in-the-money options. The key reason is explained above. 'JZ-Approx' is an approximation fully based on Ju-Zhong American Option pricing using geometric Brownian motion, which is a diffusion process. \\
+$~~~~$ When checking Approx 1-3, we noticed our approximation sensitivity to the $\epsilon$ we picked. 'Approx 1' and 'Approx 2' results were close, and 'Approx 3' over-priced for in-the-money option. We picked $\epsilon = S_0/8000 \rightarrow 0.1$ for 'Approx 3'. When $\epsilon$ is very small, it means $\sigma(\epsilon)$  being extreme small. Early exercise premium for in-the-money options will be larger than the true value when volatility is close to 0 and maturity isn't long enough.\\
+$~~~~$ Because true value of American Option price is still in progress, Appendix E's results were used for selecting best model. When getting Approx 1-3 results in Appendix D, we used FFT calculating European Put option under Variance Gamma, and it's very close to the true value implemented through finite difference (True European Put option). True American Put option = True European Put option + True early exercise premium.  The error of Approx 1-3 only happens at early exercise premium estimation. In Appendix E, 4 tables all show the early exercise premium values. Approx 1-3 were calculated through early the exercise premium based on Ju-Zhong model. We noticed that Approx 2 ($\epsilon = S_0 / 2000 \approx 0.7$) captures the highest accuracy. 
+
+\section{Conclusion}
+\label{sec4}\
+We revisited Whaley and Ju-Zhong approximation and further checked their Greeks. Both model did well on $\Delta, \Gamma$ and $\Theta$. However, Whaley's model didn't perform well on $Vega$ approximation when maturity is of intermediate length. Ju-Zhong's model is robust to Greeks and price approximation for the whole range maturities.\\
+$~~~~$ For American Option pricing under Variance Gamma model, we used the same approximation structure as Ju-Zhong's did, and got analytical approximation. American VG was the summation of the Euro VG and the early exercise premium implemented under Ju-Zhong's method. Our answer was sensitive to the $\epsilon$ picked. When $\epsilon = S_0 / 2000 \approx 0.7$, our model captured highest accuracy.
+
+
+
+\clearpage
+%% The Appendices part is started with the command \appendix;
+%% appendix sections are then done as normal sections
+\textbf{Reference}\\
+\textbf{[1]}: BARONE--ADESI, G. I. O. V. A. N. N. I., and Robert E. Whaley. Efficient analytic approximation of American option values. \emph{The Journal of Finance} 42.2 (1987): 301-320.
+\textbf{[2]}: Ju, Nengjiu, and Rui Zhong. An approximate formula for pricing American options. \emph{The Journal of Derivatives} 7.2 (1999): 31-40.\\
+\textbf{[3]}: Madan, Dilip B., Peter P. Carr, and Eric C. Chang. The variance gamma process and option pricing. \emph{Review of Finance} 2.1 (1998): 79-105\\
+\textbf{[4]}: Hirsa, Ali, and Dilip B. Madan. Pricing American options under variance gamma. \emph{Journal of Computational Finance} 7.2 (2004): 63-80\\
+\textbf{[5]}: Braunstein, Alex. American Option Approximations. (2008)
+
+\end{spacing}
+
+\clearpage
+\appendix
+
+\section{Whaley American Option pricing approximation equation re-derivation and Greeks calculation}
+\label{appendix-sec1}
+\subsection{Equation re-derivation}
+$\bullet$ Equation abbreviation: \\[6pt]
+$N(x)$: cdf of standard normal; $\hspace{0.5cm} n(x)$: pdf of standard normal\\ [6pt]
+$\text{priceEuro}(S, T, 1) = c(S, T)$; $\hspace{0.5cm}\text{priceEuro}(S, T, -1) = p(S, T)$\\[6pt]
+$\text{deltaEuro}(S, T, \phi) = \phi  e^{-qT} N(\phi d_1(S))$; $\hspace{0.5cm}\text{gammaEuro}(S, T, \phi) = \frac{e^{-qT}n(d_1(S))}{S\sigma\sqrt{T}}$\\[6pt]
+$\text{vegaEuro}(S,T,\phi) = S e^{-qT}n(d_1(S))\sqrt{T}$\\[6pt]
+$\text{thetaEuro}(S,T,\phi) = -e^{-qT}\frac{Sn(d_1(S)\sigma}{2\sqrt{T}} - \phi rKe^{-rT}N(\phi d_2(S)) + \phi qSe^{-qT} N(\phi d_1(S))$ \\[6pt]
+$d_1(S) = \frac{ln(S/K) + (r-q+\frac{1}{2}\sigma^2)\tau}{\sigma \sqrt{\tau}}$; $\hspace{0.5cm} d_2(S) = \frac{ln(S/K) + (r-q-\frac{1}{2}\sigma^2)\tau}{\sigma \sqrt{\tau}}$\\[6pt]
+\begin{spacing}{1.3}
+$\bullet$ Equation re-derivation ($\phi = 1$: call, $\phi = -1$: put; Use the same parameter named in Ju Zhong paper)\\[6pt]
+$$h =  K = 1-e^{-r\tau}, \hspace{1cm} \alpha = M = \frac{2r}{\sigma^2}, \hspace{0.5cm} \beta = N = \frac{2(r-q)}{\sigma^2}$$
+$$\lambda = \frac{-(\beta-1) + \phi \sqrt{(\beta-1)^2 + 4\frac{\alpha}{h}}}{2} \hspace{1cm} \text{For } q_1 \text{ and } q_2 $$
+$$d_1(S^*) = \frac{ln(S^*/K) + (r-q+\frac{1}{2} \sigma^2) \tau}{\sigma \sqrt{\tau}}$$
+$$A = \phi \frac{S^*}{\lambda} \left[ 1 - e^{-q\tau} N(\phi d_1(S^*)) \right] \hspace{1cm} \text{For } A_1 \text{ and } A_2 $$
+Seed value:\\
+$$\lambda(\infty) = \frac{-(\beta-1) + \phi \sqrt{(\beta-1)^2 + 4\alpha}}{2} \hspace{1cm} \text{For } q_1(\infty) \text{ and } q_2(\infty) $$
+$$S^*(\infty) = \frac{K}{1 - \frac{1}{\lambda(\infty)}}  \hspace{1cm} \text{For } S^*(\infty) \text{ and } S^{**}(\infty) $$
+Initial guess for $S^*$\\
+$$ hI = - [ (r-q)\tau + 2\phi \sigma \sqrt{\tau} ]\frac{K}{S^*(\infty) -K} \hspace{1cm} \text{For } h_1 \text{ and } h_2 $$
+$$ S^* = S^*(\infty) + (K - S^*(\infty))e^{hI}$$
+Determine $S^*$\\
+$$ \phi  (S^* - K) = \text{priceEuro}(S^*, \tau, \phi)  + \frac{\phi S^*}{\lambda}[1 - e^{-q\tau} N(\phi d_1(S^*))$$
+$$\text{LHS}(S_i) = \phi  (S^* - K); \hspace{0.5cm} \text{RHS}(S_i) =\text{priceEuro}(S^*, \tau, \phi)  + \frac{\phi S^*}{\lambda}[1 - e^{-q\tau} N(\phi d_1(S^*))$$
+$$b_i = \text{deltaEuro}(S_i, \tau)(1-\frac{1}{\lambda}) + \frac{\phi  (1 - \phi \frac{e^{-q\tau} n(d_1(S_i))}{\sigma \sqrt{\tau}})}{\lambda}$$
+$$S_{i+1} = \frac{\phi K + \text{RHS}(S_i) - b_i s_i}{\phi-  b_i}$$
+\[   V_a(S, T, \phi) = \left\{ 
+\begin{array}{ll}
+      \text{priceEuro}(S, T, \phi) + A(\frac{S}{S^*} )^{\lambda} & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      \phi(S-K) & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]\\[6pt]
+\end{spacing}
+
+\subsection{Greeks equation}
+$\rhd$ Delta\\
+\[   \Delta(S, T, \phi) = \left\{ 
+\begin{array}{ll}
+      \text{deltaEuro}(S, T, \phi) + \frac{A\lambda}{(S^*)^{\lambda}} S^{\lambda-1} & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      \phi & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+
+$\rhd$ Gamma\\
+\[   \Gamma(S, T, \phi) = \left\{ 
+\begin{array}{ll}
+      \text{gammaEuro}(S, T, \phi) + \frac{A\lambda (\lambda-1)}{(S^*)^{\lambda}} S^{\lambda-2} & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      0 & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+
+$\rhd$ Theta\\
+$$\Theta = rV_a(S, T, \phi)  - \frac{1}{2}\sigma^2 S^2 \Gamma - (r-q)S\Delta$$
+
+$\rhd$ Gamma\\
+$$\frac{\partial \alpha}{\partial \sigma} = -2 \frac{\alpha}{\sigma} \hspace{0.5cm} \frac{\partial \beta}{\partial \sigma} = -2 \frac{\beta}{\sigma}$$
+
+$$\frac{\partial \lambda}{\partial \sigma} = \frac{1}{2}\left[- \frac{\partial \beta}{\partial \sigma} +\frac{\phi}{2} \frac{2(\beta-1) \frac{\partial \beta}{\partial \sigma} + \frac{4}{h} \frac{\partial \alpha}{\partial \sigma} }{\sqrt{(\beta-1)^2 + \frac{4 \alpha}{h}}}\right]$$
+
+$$\frac{\partial d_1(S^*)}{\partial \sigma} = \frac{1}{\sigma \sqrt{\tau}} (\frac{1}{S^*} \frac{\partial S^*}{\partial \sigma} +\sigma \tau) - \frac{d_1S(^*)}{\sigma}=\frac{1}{S^*\sigma \sqrt{\tau}}\frac{\partial S^*}{\partial \sigma} + (\sqrt{\tau} - \frac{d_1S(^*)}{\sigma})$$
+
+In order to get $\frac{\partial d_1(S^*)}{\partial \sigma} $, we need get $\frac{\partial S^*}{\partial \sigma}$ in advance. In order to get $\frac{\partial S^*}{\partial \sigma}$, we use $ \phi  (S^* - K) = \text{priceEuro}(S^*, \tau, \phi)  + \frac{\phi S^*}{\lambda}[1 - e^{-q\tau} N(\phi d_1(S^*))$\\[6pt]
+
+$$\phi \frac{\partial S^*}{\partial \sigma} = \text{vegaEuro}(S^*,\tau,\phi) + \text{deltaEuro}(S^*,\tau,\phi)\frac{\partial S^*}{\partial \sigma} + \phi \frac{S^*}{\lambda}(-e^{-q\tau})\phi n(d_1(S^*))\frac{\partial d_1(S^*)}{\partial \sigma} $$ 
+$$+ \phi[1-e^{-q\tau}N(\phi d_1(S^*))](\frac{1}{\lambda}\frac{\partial S^*}{\partial \sigma} - \frac{S^*}{\lambda^2} \frac{\partial \lambda}{\partial \sigma})$$
+
+$$ = \text{vegaEuro}(S^*,\tau,\phi) + \text{deltaEuro}(S^*,\tau,\phi) \frac{\partial S^*}{\partial \sigma} - \frac{S^*}{\lambda}e^{-q\tau}n(d_1(S^*))[\frac{1}{S^*\sigma \sqrt{\tau}}\frac{\partial S^*}{\partial \sigma} + (\sqrt{\tau} - \frac{d_1S(^*)}{\sigma})]$$
+$$+(\phi - \text{deltaEuro}(S^*,\tau,\phi))(\frac{1}{\lambda}\frac{\partial S^*}{\partial \sigma} - \frac{S^*}{\lambda^2} \frac{\partial \lambda}{\partial \sigma})$$\\[0.3pt]
+$$\frac{\partial S^*}{\partial \sigma} = \frac{ \text{vegaEuro}(S^*,\tau,\phi) - \frac{S^*}{\lambda}e^{-q\tau}n(d_1(S^*))(\sqrt{\tau} - \frac{d_1S(^*)}{\sigma})- \frac{\phi - \text{deltaEuro}(S^*,\tau,\phi)}{\lambda^2}S^*\frac{\partial \lambda}{\partial \sigma}}{\phi - \text{deltaEuro}(S^*,\tau,\phi) + e^{-q\tau}\frac{n(d_1(S^*))}{\lambda \sigma \sqrt{\tau}} - \frac{\phi - \text{deltaEuro}(S^*,\tau,\phi)}{\lambda}}$$
+
+After getting $\frac{\partial S^*}{\partial \sigma}$, we could get $\frac{\partial d_1(S^*)}{\partial \sigma} $\\[6pt]
+
+$$\frac{\partial A}{\partial \sigma} = \phi[1-e^{q\tau}N(\phi d_1(S^*))](\frac{1}{\lambda} \frac{\partial S^*}{\partial \sigma} - \frac{S^*}{\lambda^2} \frac{\partial \lambda}{\partial \sigma}) - e^{-q\tau}\frac{S^*}{\lambda}n(d_1(S^*))\frac{\partial d_1(S^*)}{\partial \sigma}$$
+
+\[   Vega_A(S, T, \phi) = \left\{ 
+\begin{array}{ll}
+      \text{vegaEuro}(S, \tau, \phi) + (\frac{S}{S^*})^{\lambda} \left[\frac{\partial A}{\partial \sigma} +A(\frac{\partial \lambda}{\partial \sigma} \text{ln}(\frac{S}{S^*}) -\frac{\lambda}{S^*} \frac{\partial S^*}{\partial \sigma})\right] & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      0 & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+
+\clearpage
+\section{Ju-Zhong American Option pricing approximation Greeks calculation}
+\label{appendix-sec2}
+\subsection{Greeks equation}
+\begin{spacing}{1.3}
+$$ \lambda'(h) = - \frac{\phi \alpha}{h^2} \frac{1}{\sqrt{(\beta-1)^2 + 4\alpha/h}}$$
+$$ c = - \frac{(1-h)\alpha}{2\lambda + \beta -1} \left(-\frac{1}{hA(h)} \frac{\text{thetaEuro}(S^*, \tau, \phi)}{re^{-r\tau}} + \frac{1}{h} + \frac{\lambda'(h)}{2\lambda + \beta -1}\right)$$
+$\bullet$ 
+Greeks analysis\\
+$\rhd$ Delta\\
+\[   \Delta = \left\{ 
+\begin{array}{ll}
+      \text{deltaEuro}(S, T, \phi) + \left(\frac{\lambda(h)}{S(1-\chi)}  + \frac{\chi'(S)}{(1-\chi)^2}  \right) \left(\phi(S^*-K) - V_E(S^*)\right) (\frac{S}{S^*})^{\lambda(h)} & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      \phi & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+
+$\rhd$ Gamma\\
+\[   \Gamma= \left\{ 
+\begin{array}{ll}
+\begin{tiny}
+      \text{gammaEuro}(S, T, \phi) + \left( \frac{2\lambda(h)\chi'(S)}{S(1-\chi)^2} + \frac{2\chi'^2(S)}{(1-\chi)^3} + \frac{\chi''(S)}{(1-\chi)^2} + \frac{\lambda^2(h) - \lambda(h)}{S^2(1-\chi)} \right) \left(\phi(S^*-K) - V_E(S^*)\right) (\frac{S}{S^*})^{\lambda(h)}  \end{tiny} \\
+       \phi(S^* - S) > 0\\
+      0  \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+
+$\rhd$ Theta\\
+$$\Theta = rV_a(S, T, \phi)  - \frac{1}{2}\sigma^2 S^2 \Gamma - (r-q)S\Delta$$
+
+$\rhd$ Vega\\
+$$\frac{\partial \alpha}{\partial \sigma} = -2 \frac{\alpha}{\sigma} \hspace{0.5cm} \frac{\partial \beta}{\partial \sigma} = -2 \frac{\beta}{\sigma}$$
+
+$$\frac{\partial \lambda}{\partial \sigma} = \frac{1}{2}\left[- \frac{\partial \beta}{\partial \sigma} +\frac{\phi}{2} \frac{2(\beta-1) \frac{\partial \beta}{\partial \sigma} + \frac{4}{h} \frac{\partial \alpha}{\partial \sigma} }{\sqrt{(\beta-1)^2 + \frac{4 \alpha}{h}}}\right]$$
+
+$$\frac{\partial \lambda'(h)}{\partial \sigma} = -\frac{\phi}{h^2} \left[\frac{1}{\sqrt{(\beta-1)^2 + 4\alpha/h}} \frac{\partial \alpha}{\partial \sigma} - \frac{\alpha}{2} \frac{1}{((\beta-1)^2 + 4\alpha/h)^{3/2}} \left(2(\beta-1)\frac{\partial \beta}{\partial \sigma} + \frac{4}{h} \frac{\partial \alpha}{\partial \sigma} \right) \right]$$
+
+$$\frac{\partial b}{\partial \sigma} = \frac{1-h}{2(2\lambda + \beta -1)} \left[\lambda'(h) \frac{\partial \alpha}{\partial \sigma} + \alpha \frac{\partial \lambda'(h)}{\partial \sigma} - \frac{\alpha \lambda'(h)}{2\lambda + \beta -1} \left(2 \frac{\partial \lambda}{\partial \sigma} + \frac{\partial \beta}{\partial \sigma}\right) \right]$$
+
+$$\frac{\partial d_1(S^*)}{\partial \sigma} = \frac{1}{\sigma \sqrt{\tau}} (\frac{1}{S^*} \frac{\partial S^*}{\partial \sigma} +\sigma \tau) - \frac{d_1S(^*)}{\sigma}=\frac{1}{S^*\sigma \sqrt{\tau}}\frac{\partial S^*}{\partial \sigma} + (\sqrt{\tau} - \frac{d_1S(^*)}{\sigma})$$
+
+$$\frac{\partial d_2(S^*)}{\partial \sigma} = \frac{\partial d_1(S^*)}{\partial \sigma} - \sqrt{\tau} = \frac{1}{S^*\sigma \sqrt{\tau}}\frac{\partial S^*}{\partial \sigma}  - \frac{d_1S(^*)}{\sigma}$$
+
+In order to get $\frac{\partial d_2(S^*)}{\partial \sigma} $and $\frac{\partial d_1(S^*)}{\partial \sigma} $, we need to get $\frac{\partial S^*}{\partial \sigma}$ first. We could use equation $\phi S^* = \phi S^* e^{-q\tau}N(\phi d_1(S^*)) + \lambda[\phi (S^*-K) - V_E(S^*)]$ for getting $\frac{\partial S^*}{\partial \sigma}$
+
+$$\phi \frac{\partial S^*}{\partial \sigma} = S^* e^{-q\tau}n(d_1(S^*))\frac{\partial d_1(S^*)}{\partial \sigma} + \text{deltaEuro}(S^*, \tau, \phi) \frac{\partial S^*}{\partial \sigma} + [\phi (S^*-K) - V_E(S^*)]\frac{\partial \lambda}{\partial \sigma} $$ $$+ \lambda \left[ \phi \frac{\partial S^*}{\partial \sigma} - \text{vegaEuro}(S^*, \tau, \phi) - \text{deltaEuro}(S^*, \tau, \phi)\frac{\partial S^*}{\partial \sigma}\right]$$
+$$\phi \frac{\partial S^*}{\partial \sigma} = S^* e^{-q\tau}n(d_1(S^*))\left[\frac{1}{S^*\sigma \sqrt{\tau}}\frac{\partial S^*}{\partial \sigma} + (\sqrt{\tau} - \frac{d_1S(^*)}{\sigma}) \right] + \text{deltaEuro}(S^*, \tau, \phi) \frac{\partial S^*}{\partial \sigma}$$ $$ + [\phi (S^*-K) - V_E(S^*)]\frac{\partial \lambda}{\partial \sigma} + \lambda \left[ \phi \frac{\partial S^*}{\partial \sigma} - \text{vegaEuro}(S^*, \tau, \phi) - \text{deltaEuro}(S^*, \tau, \phi)\frac{\partial S^*}{\partial \sigma}\right]$$
+$$\frac{\partial S^*}{\partial \sigma} = \frac{S^* e^{-q\tau}n(d_1(S^*))\left(\sqrt{\tau} - \frac{d_1S(^*)}{\sigma} \right) + \left[\phi (S^*-K) - V_E(S^*)\right]\frac{\partial \lambda}{\partial \sigma} - \lambda \text{vegaEuro}(S^*, \tau, \phi) }{(1-\lambda)(\phi-\text{deltaEuro}(S^*, \tau, \phi)) - \frac{e^{-q\tau}}{\sigma \sqrt{\tau}} n(d_1(S^*))}$$
+
+$$\frac{\partial A}{\partial \sigma} = \frac{1}{h} \left[(\phi - \text{deltaEuro}(S^*, \tau, \phi))\frac{\partial S^*}{\partial \sigma} - \text{vegaEuro}(S^*, \tau, \phi) \right]$$
+
+$$\frac{\partial \text{thetaEuro}(S^*,T,\phi)}{\partial \sigma} = - \frac{e^{-q\tau}n(d_1(S^*))}{2\sqrt{\tau}} \left[S^*+ \sigma \frac{\partial S^*}{\partial \sigma} - S^* \sigma d_1(S^*)\frac{\partial d_1(S^*)}{\partial \sigma}\right] - rKe^{-r\tau}n(d_2(S^*))\frac{\partial d_2(S^*)}{\partial \sigma}$$ $$ +  qS^*e^{-q\tau}n(d_1(S^*))\frac{\partial d_1(S^*)}{\partial \sigma} + q \text{deltaEuro}(S^*, \tau, \phi) \frac{\partial S^*}{\partial \sigma} $$ 
+
+$$\frac{\partial c}{\partial \sigma} = -\frac{(1-h)\alpha}{2\lambda + \beta - 1} [ - \frac{1}{hre^{-r\tau}} \left(\frac{1}{A} \frac{\partial \text{thetaEuro}(S^*,T,\phi)}{\partial \sigma} - \frac{\text{thetaEuro}(S^*,T,\phi)}{A^2} \frac{\partial A}{\partial \sigma} \right) + \frac{1}{2\lambda + \beta -1} \frac{\partial \lambda'(h)}{\partial \sigma} $$ $$- \frac{\lambda'(h)}{(2\lambda + \beta -1)^2}(2\frac{\partial \lambda}{\partial \sigma} + \frac{\partial \beta}{\partial \sigma} ) ] - (1-h) \left[-\frac{\text{thetaEuro}(S^*,T,\phi)}{hre^{-r\tau}A} + \frac{1}{h} + \frac{\lambda'(h)}{2\lambda + \beta -1} \right][\frac{1}{2\lambda + \beta -1} \frac{\partial \alpha}{\partial \sigma}$$ $$ - \frac{\alpha}{(2\lambda + \beta -1)^2}(2\frac{\partial \lambda}{\partial \sigma} + \frac{\partial \beta}{\partial \sigma})] $$
+
+$$ \frac{\partial \chi}{\partial \sigma} = \frac{\partial b}{\partial \sigma}(\log(\frac{S}{S^*}))^2 - \left[\frac{2b}{S^*} \log (\frac{S}{S^*}) + \frac{c}{S^*} \right]\frac{\partial S^*}{\partial \sigma} + \frac{\partial c}{\partial \sigma} \log (\frac{S}{S^*}) $$
+
+\[   Vega_A = \left\{ 
+\begin{array}{ll}
+      \text{vegaEuro}(S, \tau, \phi) + \frac{h(\frac{S}{S^*})^{\lambda}}{1-\chi}\left[\frac{\partial A}{\partial \sigma} +A(\frac{\partial \lambda}{\partial \sigma}\log(\frac{S}{S^*}) -\frac{\lambda}{S^*} \frac{\partial S^*}{\partial \sigma} ) \right] + \frac{hA(\frac{S}{S^*})^{\lambda}}{(1-\chi)^2}\frac{\partial \chi}{\partial \sigma} & \hspace{0.5cm}  \phi(S^* - S) > 0\\
+      0 & \hspace{0.5cm}  \phi(S^* - S) \leq 0\\
+\end{array} 
+\right. \]
+\end{spacing}
+
+\clearpage
+\section{Ju-Zhong \& Whaley American Option pricing Price and Greeks Approximation comparison}
+\label{appendix-sec2}
+\subsection{VALUES AND GREEKS OF AMERICAN PUTS ($S = \$ 40, r = 0.0488, \delta = 0.0$)}
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\resizebox{\textwidth}{!}{\begin{tabular}{| c | c | c | c | c | c | c| c| c| c| c| c| c| c| c| c|}
+\hline
+\textbf{($K,\sigma, \tau, (yr)$)} & \multicolumn{3}{ c |}{\textbf{Price}} &  \multicolumn{3}{ c |}{\textbf{Delta}} & \multicolumn{3}{ c |}{\textbf{Gamma}} & \multicolumn{3}{ c |}{\textbf{Theta}} & \multicolumn{3}{ c |}{\textbf{Vega}}\\ 
+\cline{2-4}  \cline{5-7} \cline{8-10} \cline{11-13} \cline{14-16}
+& \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad}\\
+\hline
+
+ (35, 0.2, 0.0833)&  0.006&  0.006&  0.006&  -0.008& -0.008&  -0.008& 0.009& 0.010& 0.009& -0.287& -0.289& -0.288& 0.250& 0.256& 0.253\\ \hline
+ (35, 0.2, 0.3333)&  0.200&  0.204&  0.201&  -0.0900& -0.0900&  -0.0900& 0.036& 0.035& 0.035& -0.956& -0.948& -0.950& 3.751& 3.753& 3.734\\ \hline
+ (35, 0.2, 0.5833)&  0.433&  0.442&  0.433&  -0.134& -0.134&  -0.133& 0.036& 0.036& 0.036& -0.882& -0.866& -0.874& 6.577& 6.567& 6.532\\ \hline
+ (40, 0.2, 0.0833)&  0.852&  0.850&  0.851&  -0.469& -0.467&  -0.469& 0.178& 0.176& 0.178& -4.727& -4.681& -4.742& 4.572& 4.566& 4.571\\ \hline  
+(40, 0.2, 0.3333) &  1.580&  1.577&  1.576&  -0.443& -0.439& -0.442 & 0.092& 0.091& 0.093& -2.012& -1.976& -2.025& 8.996& 8.978& 8.98\\ \hline 
+(40, 0.2, 0.5833) &  1.991& 1.989 &  1.984&  -0.429& -0.423& -0.427 & 0.072& 0.071& 0.072& -1.367& -1.335& -1.379& 11.730& 11.712& 11.695\\ \hline
+(45, 0.2, 0.0833)&  5.000&5.000&5.000&-1.000&-1.000&-1.000&0.000&0.000&0.000&0.000&0.000&0.000&0.000&0.000&0.000 \\ \hline    
+(45, 0.2, 0.3333)&  5.088&5.066&5.084&-0.881&-0.887&-0.881&0.083&0.094&0.082&-0.678&-1.039&-0.648&4.054&3.787&4.054 \\ \hline    
+(45, 0.2, 0.5833)&  5.267&5.236&5.260&-0.795&-0.794&-0.796&0.079&0.085&0.079&-0.709&-0.914&-0.707&7.800&7.697&7.741 \\ \hline  
+(35, 0.3, 0.0833) &  0.077&  0.078&  0.077&  -0.052& -0.052& -0.052 & 0.031& 0.031& 0.031& -2.097& -2.094& -2.097& 1.236& 1.221& 1.219\\ \hline
+ (35, 0.3, 0.3333)&  0.698& 0.701 & 0.697 & -0.174 & -0.174&  -0.174& 0.038& 0.037& 0.037& -2.336& -2.314& -2.325& 5.905& 5.912& 5.907 \\ \hline
+(35, 0.3, 0.5833) &  1.220& 1.228 & 1.218 &  -0.213& -0.212& -0.212 & 0.033& 0.032& 0.032& -1.871& -1.843& -1.862& 8.817& 8.814& 8.801\\ \hline
+(40, 0.3, 0.0833) &  1.310&  1.308&  1.309&  -0.469& -0.468& -0.469 & 0.117& 0.116& 0.117& -7.447& -7.395& -7.465& 4.581& 4.578& 4.581\\ \hline 
+(40, 0.3, 0.3333) &  2.483&  2.478&  2.477& -0.442 & -0.439& -0.441 &0.060 & 0.059& 0.060& -3.320& -3.275& -3.332& 9.046& 9.036& 9.036\\ \hline 
+(40, 0.3, 0.5833) &  3.170&  3.167&  3.160&  -0.426& -0.422& -0.425 & 0.046& 0.045& 0.046& -2.320& -2.279& -2.333& 11.828& 11.819& 11.804\\ \hline     
+(45, 0.3, 0.0833)&  5.060&  5.047&  5.059&  -0.923& -0.926&  -0.922& 0.058& 0.063& 0.056& -2.110& -2.514& -2.009& 1.584& 1.526& 1.616 \\ \hline    
+(45, 0.3, 0.3333)&  5.706&  5.679&  5.699&  -0.727& -0.722&  -0.727& 0.057& 0.058& 0.057& -2.42& -2.488& -2.434& 7.470& 7.501& 7.441\\ \hline    
+(45, 0.3, 0.5833)&  6.244&6.215&6.231&-0.652&-0.646&-0.652&0.049&0.049&0.049&-1.917&-1.949&-1.945&10.895&10.976&10.879 \\ \hline    
+(35, 0.4, 0.0833)&  0.247&0.247&0.246&-0.106&-0.106&-0.106&0.040&0.040&0.040&-4.875&-4.864&-4.868&2.122&2.115&2.114 \\ \hline    
+(35, 0.4, 0.3333)&  1.346&1.349&1.344&-0.226&-0.225&-0.225&0.033&0.033&0.033&-3.718&-3.687&-3.707&6.905&6.919&6.917 \\ \hline    
+(35, 0.4, 0.5833)&  2.155&2.162&2.150&-0.254&-0.253&-0.253&0.027&0.027&0.027&-2.842&-2.807&-2.833&9.786&9.737&9.727 \\ \hline    
+(40, 0.4, 0.0833)&  1.768&1.766&1.767&-0.467&-0.465&-0.467&0.087&0.087&0.087&-10.173&-10.117&-10.194&4.582&4.581&4.582 \\ \hline 
+(40, 0.4, 0.3333)&  3.388&3.382&3.381&-0.436&-0.434&-0.435&0.044&0.044&0.044&-4.634&-4.584&-4.646&9.048&9.043&9.039 \\ \hline 
+(40, 0.4, 0.5833)&  4.353 & 4.349 & 4.341 & -0.417 & -0.414 & -0.416 & 0.034 & 0.033 & 0.034 & -3.281 & -3.233 & -3.292 & 11.824 & 11.823 & 11.805  \\ \hline 
+(45, 0.4, 0.0833)&  5.287 & 5.273 & 5.288 & -0.836 & -0.834 & -0.837 & 0.059 & 0.06 & 0.059 & -5.667 & -5.779 & -5.602 & 2.799 & 2.830 & 2.816  \\ \hline 
+(45, 0.4, 0.3333)&  6.510 & 6.487 & 6.501 & -0.648 & -0.644 & -0.648 & 0.044 & 0.044 & 0.044 & -4.043 & -4.039 & -4.076 & 8.420 & 8.494 & 8.443  \\ \hline 
+(45, 0.4, 0.5833)&  7.383 & 7.360 & 7.367 & -0.582 & -0.577 & -0.582 & 0.036 & 0.035 & 0.036 & -3.050 & -3.032 & -3.085 & 11.691 & 11.768 & 11.694 \\ \hline 
+\end{tabular}}
+\end{center}
+\end{table}
+
+\subsection{VALUES AND GREEKS OF AMERICAN CALLS ($K = \$ 100, \tau = 0.5 \text{year}$)}
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\resizebox{\textwidth}{!}{\begin{tabular}{| c | c | c | c | c | c | c| c| c| c| c| c| c| c| c| c|}
+\hline
+\textbf{($S,\sigma, r, \delta$)} & \multicolumn{3}{ c |}{\textbf{Price}} &  \multicolumn{3}{ c |}{\textbf{Delta}} & \multicolumn{3}{ c |}{\textbf{Gamma}} & \multicolumn{3}{ c |}{\textbf{Theta}} & \multicolumn{3}{ c |}{\textbf{Vega}}\\ 
+\cline{2-4}  \cline{5-7} \cline{8-10} \cline{11-13} \cline{14-16}
+& \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad}\\
+\hline
+
+(80, 0.2, 0.03, 0.07)&  0.219 & 0.230 & 0.222 & 0.049 & 0.050 & 0.049 & 0.009 & 0.009 & 0.009 & -0.990 & -0.990 & -0.985 & 5.740 & 5.808& 5.714 \\ \hline    
+(90, 0.2, 0.03, 0.07)&  1.387 & 1.405 & 1.386 & 0.208 & 0.208 & 0.207 & 0.023 & 0.023 & 0.023 & -2.919 & -2.873 & -2.898 & 17.968 & 17.968 & 17.891  \\ \hline    
+(100, 0.2, 0.03, 0.07)&  4.783 & 4.782 & 4.768 & 0.484 & 0.479 & 0.482 & 0.030 & 0.030 & 0.030 & -3.965 & -3.88 & -3.992 & 27.190 & 27.190 & 27.122   \\ \hline    
+(110, 0.2, 0.03, 0.07)&  11.098 & 11.041 & 11.079 & 0.772 & 0.767 & 0.773 & 0.026 & 0.027 & 0.026 & -2.592 & -2.826 & -2.627 & 21.291 & 21.422 & 21.183  \\ \hline    
+(120, 0.2, 0.03, 0.07)&  20.000 & 20.000 & 20.000 & 0.995 & 1.000 & 1.000 & 0.013 & 0.000 & 0.000 & -0.000 & 0.000 & 0.000 & 0.414 & 0.000 & 0.000   \\ \hline    
+(80, 0.4, 0.03, 0.07)&  2.689 & 2.711 & 2.687 & 0.232 & 0.233 & 0.232 & 0.014 & 0.013 & 0.013 & -6.09 & -6.045 & -6.059 & 17.147 & 17.057 & 16.994 \\ \hline    
+(90, 0.4, 0.03, 0.07)&  5.723 & 5.742 & 5.711 & 0.377 & 0.376 & 0.376 & 0.015 & 0.015 & 0.015 & -8.206 & -8.112 & -8.179 & 23.727 & 23.666 & 23.614 \\ \hline    
+(100, 0.4, 0.03, 0.07)&  10.239 & 10.242 & 10.214 & 0.525 & 0.523 & 0.524 & 0.014 & 0.014 & 0.014 & -9.092 & -8.966 & -9.110 & 27.267 & 27.297 & 27.227 \\ \hline    
+(110, 0.4, 0.03, 0.07)&  16.183 & 16.152 & 16.146 & 0.660 & 0.656 & 0.659 & 0.012 & 0.012 & 0.012 & -8.614 & -8.523 & -8.698 & 27.218 & 27.286 & 27.123  \\ \hline    
+(120, 0.4, 0.03, 0.07)& 23.361 & 23.288 & 23.321 & 0.772 & 0.768 & 0.772 & 0.010 & 0.010 & 0.010 & -7.101 & -7.175 & -7.208 & 23.844 & 24.061 & 23.768 \\ \hline    
+(80, 0.3, 0.00, 0.07)&  1.037 & 1.062 & 1.040 & 0.133 & 0.134 & 0.133 & 0.013 & 0.013 & 0.013 & -2.954 & -2.917 & -2.930 & 11.960 & 12.089 & 12.007  \\ \hline    
+(90, 0.3, 0.00, 0.07)&  3.124 & 3.147 & 3.118 & 0.293 & 0.292 & 0.292 & 0.019 & 0.018 & 0.019 & -4.938 & -4.829 & -4.917 & 21.493 & 21.396 & 21.366  \\ \hline    
+(100, 0.3, 0.00, 0.07)&  7.036 & 7.0280 & 7.015 & 0.492 & 0.487 & 0.491 & 0.020 & 0.020 & 0.020 & -5.731 & -5.604 & -5.775 & 27.139 & 27.113 & 27.066 \\ \hline    
+(110, 0.3, 0.00, 0.07)&  12.956 & 12.886 & 12.928 & 0.689 & 0.682 & 0.689 & 0.019 & 0.019 & 0.019 & -4.800 & -4.922 & -4.875 & 25.499 & 25.674& 25.453 \\ \hline
+(120, 0.3, 0.00, 0.07)&  20.718 & 20.607 & 20.695 & 0.858 & 0.859 & 0.859 & 0.015 & 0.017 & 0.015 & -2.642 & -3.627 & -2.600 & 16.343 & 15.972 & 16.277 \\ \hline
+(80, 0.3, 0.07, 0.03)&  1.664 & 1.665 & 1.664 & 0.194 & 0.194 & 0.194 & 0.016 & 0.016 & 0.016 & -5.147 & -5.147 & -5.146 & 15.356 & 15.474 & 15.471 \\ \hline    
+(90, 0.3, 0.07, 0.07)&  4.495 & 4.495 & 4.495 & 0.378 & 0.378 & 0.378 & 0.020 & 0.020 & 0.020 & -8.229 & -8.227 & -8.226 & 24.018 & 23.943 & 23.937 \\ \hline    
+(100, 0.3, 0.07, 0.03)&  9.251 & 9.251 & 9.251 & 0.571 & 0.571 & 0.571 & 0.018 & 0.018 & 0.018 & -9.811 & -9.808 & -9.807 & 27.237 & 27.251 & 27.240 \\ \hline    
+(110, 0.3, 0.07, 0.03)& 15.798 & 15.799 & 15.798 & 0.731 & 0.731 & 0.731 & 0.014 & 0.014 & 0.014 & -9.540 & -9.539 & -9.537 & 24.655 & 24.776 & 24.758  \\ \hline
+(120, 0.3, 0.07, 0.03)&  23.706 & 23.709 & 23.707 & 0.843 & 0.843 & 0.843 & 0.009 & 0.009 & 0.009 & -8.093 & -8.095 & -8.092 & 18.859 & 19.055 & 19.026 \\ \hline
+\end{tabular}}
+\end{center}
+\end{table}
+
+\clearpage
+\subsection{VALUES AND GREEKS OF AMERICAN PUTS ($K = \$ 100, \tau = 3.0 \text{ years}, \sigma = 0.2, r = 0.08$)}
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\resizebox{\textwidth}{!}{\begin{tabular}{| c | c | c | c | c | c | c| c| c| c| c| c| c| c| c| c|}
+\hline
+\textbf{($S, \delta$)} & \multicolumn{3}{ c |}{\textbf{Price}} &  \multicolumn{3}{ c |}{\textbf{Delta}} & \multicolumn{3}{ c |}{\textbf{Gamma}} & \multicolumn{3}{ c |}{\textbf{Theta}} & \multicolumn{3}{ c |}{\textbf{Vega}}\\ 
+\cline{2-4}  \cline{5-7} \cline{8-10} \cline{11-13} \cline{14-16}
+& \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad}\\
+\hline
+
+(80, 0.12)&  25.658 & 26.245 & 25.725 & -0.61 & -0.61 & -0.605 & 0.011 & 0.01 & 0.011 & -1.304 & -1.142 & -1.235 & 33.945 & 35.257 & 33.784 \\ \hline    
+(90, 0.12)&  20.083 & 20.641 & 20.185 & -0.506 & -0.512 & -0.504 & 0.010 & 0.010 & 0.010 & -1.82 & -1.739 & -1.76 & 43.881 & 45.682 & 43.772 \\ \hline    
+(100, 0.12)&  15.498 & 15.99 & 15.608 & -0.412 & -0.42 & -0.412 & 0.009 & 0.009 & 0.009 & -2.193 & -2.168 & -2.154 & 51.196 & 53.593 & 51.430  \\ \hline    
+(110, 0.12)&  11.803 & 12.221 & 11.905 & -0.329 & -0.336 & -0.33 & 0.008 & 0.008 & 0.008 & -2.387 & -2.397 & -2.369 & 55.394 & 58.024 & 55.787 \\ \hline    
+(120, 0.12)&  8.886 & 9.235 & 8.974 & -0.257 & -0.263 & -0.258 & 0.007 & 0.007 & 0.007 & -2.414 & -2.443 & -2.410 & 56.181 & 58.886 & 56.695 \\ \hline    
+(80, 0.08)&  22.205 & 22.395 & 22.148 & -0.688 & -0.674 & -0.688 & 0.019 & 0.019 & 0.02 & -0.68 & -0.582 & -0.751 & 37.379 & 39.468 & 37.189 \\ \hline    
+(90, 0.08)&  16.208 & 16.498 & 16.170 & -0.519 & -0.512 & -0.516 & 0.015 & 0.014 & 0.015 & -1.112 & -0.980 & -1.132 & 51.835 & 53.465 & 51.787 \\ \hline    
+(100, 0.08)&  11.704 & 12.03 & 11.700 & -0.387 & -0.386 & -0.384 & 0.012 & 0.011 & 0.012 & -1.388 & -1.277 & -1.371 & 57.988 & 59.600 & 57.986 \\ \hline    
+(110, 0.08)&  8.368 & 8.687 & 8.390 & -0.285 & -0.287 & -0.283 & 0.009 & 0.009 & 0.009 & -1.499 & -1.422 & -1.468 & 58.315 & 59.986 & 58.253\\ \hline    
+(120, 0.08)&  5.931 & 6.222 & 5.968 & -0.206 & -0.210 & -0.205 & 0.007 & 0.007 & 0.007 & -1.476 & -1.430 & -1.445 & 54.601 & 56.420 & 54.592 \\ \hline
+(80, 0.04)&  20.349 & 20.325 & 20.336 & -0.838 & -0.836 & -0.84 & 0.035 & 0.038 & 0.035 & -0.206 & -0.587 & -0.223 & 22.374 & 22.233 & 21.398 \\ \hline    
+(90, 0.04)&  13.497 & 13.563 & 13.471 & -0.554 & -0.543 & -0.554 & 0.023 & 0.022 & 0.023 & -0.586 & -0.601 & -0.634 & 49.71 & 51.434 & 49.354 \\ \hline    
+(100, 0.04)&  8.944 & 9.108 & 8.931 & -0.369 & -0.362 & -0.367 & 0.015 & 0.014 & 0.015 & -0.807 & -0.713 & -0.829 & 57.29 & 58.747 & 56.991 \\ \hline    
+(110, 0.04)& 5.912 & 6.122 & 5.92 & -0.246 & -0.243 & -0.244 & 0.010 & 0.010 & 0.010 & -0.877 & -0.774 & -0.873 & 54.86 & 56.231 & 54.587 \\ \hline    
+(120, 0.04)& 3.898 & 4.115 & 3.922 & -0.163 & -0.163 & -0.162 & 0.007 & 0.007 & 0.007 & -0.844 & -0.760 & -0.825 & 47.951 & 49.466 & 47.776 \\ \hline 
+(80, 0.0)&  20.000 & 20.000 & 20.000& -1.000 & -1.000 & -1.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\ \hline    
+(90, 0.0)&  11.695 & 11.634 & 11.705 & -0.621 & -0.615 & -0.619 & 0.035 & 0.037 & 0.035 & -0.268 & -0.291 & -0.272 & 41.572 & 42.106 & 41.125 \\ \hline    
+(100, 0.0)&  6.931 & 6.962 & 6.956 & -0.358 & -0.349 & -0.357 & 0.019 & 0.019 & 0.019 & -0.436 & -0.439 & -0.436 & 52.89 & 54.353 & 52.644 \\ \hline    
+(110, 0.0)&  4.154 & 4.257 & 4.190 & -0.211 & -0.206 & -0.21 & 0.011 & 0.011 & 0.011 & -0.481 & -0.401 & -0.47 & 48.489 & 49.892 & 48.292  \\ \hline    
+(120, 0.0)&  2.510 & 2.640 & 2.551 & -0.126 & -0.125 & -0.125 & 0.006 & 0.006 & 0.006 & -0.450 & -0.367 & -0.433 & 39.413 & 40.945 & 39.387  \\ \hline  
+\end{tabular}}
+\end{center}
+\end{table}
+
+\subsection{VALUES AND GREEKS OF AMERICAN CALLS ($K = \$ 100, \tau = 3.0 \text{ years}$)}
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\resizebox{\textwidth}{!}{\begin{tabular}{| c | c | c | c | c | c | c| c| c| c| c| c| c| c| c| c|}
+\hline
+\textbf{($S, \sigma, r, \delta$)} & \multicolumn{3}{ c |}{\textbf{Price}} &  \multicolumn{3}{ c |}{\textbf{Delta}} & \multicolumn{3}{ c |}{\textbf{Gamma}} & \multicolumn{3}{ c |}{\textbf{Theta}} & \multicolumn{3}{ c |}{\textbf{Vega}}\\ 
+\cline{2-4}  \cline{5-7} \cline{8-10} \cline{11-13} \cline{14-16}
+& \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad}  & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad} & \textbf{True} & \textbf{Quad} & \textbf{Mquad}\\
+\hline
+(80, 0.2, 0.03, 0.07)&  2.580 & 2.711 & 2.605 & 0.200 & 0.203 & 0.200 & 0.011 & 0.011 & 0.011 & -0.668 & -0.615 & -0.654 & 35.641 & 36.635 & 35.671  \\ \hline    
+(90, 0.2, 0.03, 0.07)&  5.168 & 5.301 & 5.181 & 0.321 & 0.319 & 0.320 & 0.013 & 0.013 & 0.013 & -0.825 & -0.746 & -0.820 & 49.638 & 50.459 & 49.444 \\ \hline    
+(100, 0.2, 0.03, 0.07)&  9.066 & 9.154 & 9.065 & 0.462 & 0.455 & 0.460 & 0.015 & 0.014 & 0.015 & -0.848 & -0.783 & -0.861 & 58.246 & 59.262 & 58.004\\ \hline    
+(110, 0.2, 0.03, 0.07)&  14.443 & 14.444 & 14.430 & 0.616 & 0.606 & 0.615 & 0.016 & 0.016 & 0.016 & -0.719 & -0.767 & -0.746 & 57.463 & 58.687 & 57.077 \\ \hline    
+(120, 0.2, 0.03, 0.07)&  21.414 & 21.336 & 21.398 & 0.78 & 0.775 & 0.780 & 0.017 & 0.018 & 0.017 & -0.459 & -0.802 & -0.477 & 43.296 & 43.787 & 42.844 \\ \hline  
+(80, 0.4, 0.03, 0.07)&  11.327 & 11.625 & 11.336 & 0.404 & 0.406 & 0.403 & 0.007 & 0.007 & 0.007 & -2.046 & -1.921 & -2.024 & 47.361 & 48.285 & 47.403 \\ \hline    
+(90, 0.4, 0.03, 0.07)&  15.723 & 16.028 & 15.711 & 0.474 & 0.474 & 0.472 & 0.007 & 0.007 & 0.007 & -2.199 & -2.046 & -2.194 & 53.737 & 54.583 & 53.618 \\ \hline    
+(100, 0.4, 0.03, 0.07)&  20.794 & 21.084 & 20.760 & 0.539 & 0.537 & 0.537 & 0.006 & 0.006 & 0.006 & -2.258 & -2.091 & -2.277 & 58.099 & 59.127 & 58.020 \\ \hline    
+(110, 0.4, 0.03, 0.07)&  26.496 & 26.749 & 26.440 & 0.600 & 0.596 & 0.598 & 0.006 & 0.006 & 0.006 & -2.231 & -2.073 & -2.279 & 60.591 & 61.825 & 60.505  \\ \hline    
+(120, 0.4, 0.03, 0.07)&  32.782 & 32.982 & 32.709 & 0.657 & 0.650 & 0.655 & 0.005 & 0.005 & 0.005 & -2.131 & -2.011 & -2.207 & 61.158 & 62.634 & 61.044 \\ \hline   
+(80, 0.3, 0.00, 0.07)&  5.518 & 5.658 & 5.552 & 0.285 & 0.284 & 0.285 & 0.009 & 0.009 & 0.009 & -1.048 & -0.953 & -1.035 & 42.258 & 42.794 & 42.131 \\ \hline    
+(90, 0.3, 0.00, 0.07)&  8.842 & 8.947 & 8.868 & 0.381 & 0.375 & 0.379 & 0.010 & 0.009 & 0.010 & -1.172 & -1.072 & -1.168 & 51.720 & 52.307 & 51.549 \\ \hline    
+(100, 0.3, 0.00, 0.07)&  13.142 & 13.177 & 13.158 & 0.48 & 0.472 & 0.479 & 0.010 & 0.010 & 0.010 & -1.193 & -1.139 & -1.200 & 57.964 & 58.706 & 57.742\\ \hline    
+(110, 0.3, 0.00, 0.07)&  18.453 & 18.394 & 18.458 & 0.582 & 0.572 & 0.581 & 0.010 & 0.010 & 0.010 & -1.112 & -1.182 & -1.125 & 59.722 & 60.598 & 59.429 \\ \hline    
+(120, 0.3, 0.00, 0.07)&  24.790 & 24.638 & 24.786 & 0.685 & 0.677 & 0.684 & 0.010 & 0.011 & 0.010 & -0.935 & -1.247 & -0.948 & 55.608 & 56.577 & 55.545 \\ \hline   
+(80, 0.3, 0.07, 0.03)&  12.146 & 12.282 & 12.176 & 0.48 & 0.485 & 0.481 & 0.009 & 0.009 & 0.009 & -3.227 & -3.250 & -3.230 & 50.762 & 51.781 & 50.967 \\ \hline    
+(90, 0.3, 0.07, 0.03)&  17.368 & 17.553 & 17.411 & 0.562 & 0.567 & 0.563 & 0.008 & 0.008 & 0.008 & -3.568 & -3.593 & -3.569 & 54.904 & 56.277 & 55.302  \\ \hline    
+(100, 0.3, 0.07, 0.03)&  23.348 & 23.586 & 23.402 & 0.632 & 0.637 & 0.633 & 0.006 & 0.006 & 0.006 & -3.746 & -3.77 & -3.742 & 56.760 & 58.171 & 57.047 \\ \hline    
+(110, 0.3, 0.07, 0.03)&  29.964 & 30.259 & 30.028 & 0.689 & 0.695 & 0.69 & 0.005 & 0.005 & 0.005 & -3.788 & -3.804 & -3.776 & 56.593 & 57.996 & 56.745 \\ \hline    
+(120, 0.3, 0.07, 0.03)&  37.104 & 37.459 & 37.176 & 0.737 & 0.743 & 0.738 & 0.004 & 0.004 & 0.004 & -3.721 & -3.726 & -3.699 & 54.543 & 56.321 & 54.970  \\ \hline     
+\end{tabular}}
+\end{center}
+\end{table}
+
+\clearpage
+\section{Variance Gamma American Option pricing Approximation comparison}
+\label{appendix-sec2}
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{6}{ c |}{\textbf{T  = 0.13972}}  \\ 
+\cline{2-7}
+& \textbf{EuroVG} & \textbf{FD} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  & \textbf{JZ-Approx}\\
+\hline
+
+1200 &  4.872&  &  4.89&  4.89& 4.894& 1.642\\ \hline
+1220 &  6.24&   &   6.268& 6.268& 6.276& 2.733\\ \hline
+1240 &   7.957&  &  8.0& 8.0& 8.018& 4.365\\ \hline
+1260 &  10.105&  &  10.171& 10.171& 10.206& 6.706\\ \hline
+1280 &  12.783&   &  12.883& 12.883& 12.95& 9.937\\ \hline
+1300 &  16.107&  &  16.256& 16.257& 16.379&14.237\\ \hline
+1320 &  20.219&   &   20.442& 20.442& 20.657& 19.771\\ \hline
+1340 &  25.287&   &   25.615&  25.615& 25.98& 26.675\\ \hline
+1360 &  31.509&   &   31.983&  31.984& 32.582& 35.046\\ \hline
+1380 &  39.121&   &   39.796&  39.797& 40.745& 44.934\\ \hline
+1400 &  48.397&   &   49.34&  49.340& 50.791& 56.337\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{6}{ c |}{\textbf{T  = 0.21643}}  \\ 
+\cline{2-7}
+& \textbf{EuroVG} & \textbf{FD} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  & \textbf{JZ-Approx}\\
+\hline
+
+1200 &  10.892&  &  10.965&  10.965& 10.97& 6.03\\ \hline
+1220 &  13.038&   &   13.138& 13.138& 13.163& 8.386\\ \hline
+1240 &   15.561&  &  15.699& 15.699& 15.761& 11.404\\ \hline
+1260 &  18.522&  &  18.71& 18.711& 18.839& 15.185\\ \hline
+1280 &  21.987&   &  22.242& 22.244& 22.485& 19.826\\ \hline
+1300 &  26.033&  &  26.377& 26.380& 26.805& 25.413\\ \hline
+1320 &  30.748&   &   31.208& 31.212& 31.928& 32.017\\ \hline
+1340 &  36.23&   &   36.84&  36.846& 38.005& 39.695\\ \hline
+1360 &  42.591&   &   43.393&  43.401& 45.215& 48.484\\ \hline
+1380 &  49.96&   &   51.002&  51.015& 53.765& 58.399\\ \hline
+1400 &  58.48&   &   59.821&  59.838& 63.887& 69.437\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table} 
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{6}{ c |}{\textbf{T  = 0.46575}}  \\ 
+\cline{2-7}
+& \textbf{EuroVG} & \textbf{FD} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  & \textbf{JZ-Approx}\\
+\hline
+
+1200 &  31.639&  &  32.189&  32.218& 31.896& 27.942\\ \hline
+1220 &  35.21&   &   35.874& 35.917& 35.625& 32.898\\ \hline
+1240 &   39.118&  &  39.916& 39.978& 39.78& 38.433\\ \hline
+1260 &  43.388&  &  44.343& 44.43& 44.432& 44.57\\ \hline
+1280 &  48.048&   &  49.188& 49.305& 49.67& 51.326\\ \hline
+1300 &  53.128&  &  54.482& 54.637& 55.613& 58.719\\ \hline
+1320 &  58.658&   &   60.259& 60.462& 62.411& 66.758\\ \hline
+1340 &  64.671&   &   66.557&  66.817& 70.254& 75.452\\ \hline
+1360 &  71.201&   &   73.414&  73.742& 79.384& 84.803\\ \hline
+1380 &  78.287&   &   80.872&  81.282& 90.108& 94.812\\ \hline
+1400 &  85.967&   &   88.973&  89.479& 102.804& 105.473\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{6}{ c |}{\textbf{T  = 0.56164}}  \\ 
+\cline{2-7}
+& \textbf{EuroVG} & \textbf{FD} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  & \textbf{JZ-Approx}\\
+\hline
+
+1200 &  33.397&  &  34.108&  34.137& 33.832& 30.891\\ \hline
+1220 &  37.167&   &   38.018& 38.061& 37.828& 36.032\\ \hline
+1240 &   41.287&  &  42.3& 42.362& 42.281& 41.731\\ \hline
+1260 &  45.781&  &  46.984& 47.068& 47.258& 48.009\\ \hline
+1280 &  50.676&   &  52.099& 52.212& 52.846& 54.882\\ \hline
+1300 &  56.0&  &  57.676& 57.824& 59.149& 62.363\\ \hline
+1320 &  61.781&   &   63.748& 63.938& 66.294& 70.461\\ \hline
+1340 &  68.049&   &   70.348&  70.59& 74.437& 79.184\\ \hline
+1360 &  74.835&   &   77.512&  77.815& 83.767& 88.533\\ \hline
+1380 &  82.172&   &   85.276&  85.651& 94.509& 98.508\\ \hline
+1400 &  90.093&   95.463&   93.678&  94.138& 106.933& 109.107\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\clearpage
+\section{Variance Gamma American Option pricing early exercise premium comparison}
+\label{appendix-sec2}
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c |  }
+\hline
+\textbf{Strike} & \multicolumn{4}{ c |}{\textbf{T  = 0.13972}}  \\ 
+\cline{2-5}
+& \textbf{True} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  \\
+\hline
+
+1200 &  0.025 & 0.018& 0.019 & 0.021\\ \hline
+1220 &  0.070 & 0.028& 0.029& 0.036\\ \hline
+1240 &  0.117 & 0.043 &0.043 & 0.061\\ \hline
+1260 &  0.159 & 0.066& 0.066& 0.102\\ \hline
+1280 &  0.196 & 0.100& 0.257&  0.167\\ \hline
+1300 &  0.239 & 0.151&  0.151& 0.273\\ \hline
+1320 &  0.428 & 0.224&   0.223& 0.439\\ \hline
+1340 &  0.608 & 0.328&   0.328& 0.692\\ \hline
+1360 &  0.869 & 0.474&   0.474& 1.074\\ \hline
+1380 &  1.103 & 0.676&  0.676& 1.625\\ \hline
+1400 &  1.482 & 0.942&  0.943& 2.395\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{4}{ c |}{\textbf{T  = 0.21643}}  \\ 
+\cline{2-5}
+& \textbf{True} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  \\
+\hline
+
+1200 &  0.063 & 0.073& 0.073 & 0.021\\ \hline
+1220 &  0.124 & 0.100& 0.101& 0.036\\ \hline
+1240 &  0.191 & 0.138 &0.138 & 0.061\\ \hline
+1260 &  0.253 & 0.188& 0.189& 0.102\\ \hline
+1280 &  0.322 & 0.255& 0.257&  0.167\\ \hline
+1300 &  0.392 & 0.344&  0.347& 0.273\\ \hline
+1320 &  0.602 & 0.460&   0.464& 0.439\\ \hline
+1340 &  0.791 & 0.610&   0.616& 0.692\\ \hline
+1360 &  1.078 & 0.802&   0.810& 1.074\\ \hline
+1380 &  1.374 & 1.043&  1.054& 1.625\\ \hline
+1400 &  1.678 & 1.341&  1.358& 2.395\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table} 
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{4}{ c |}{\textbf{T  = 0.46575}}  \\ 
+\cline{2-5}
+& \textbf{True} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  \\
+\hline
+
+1200 &  0.539 & 0.550& 0.579 & 0.257\\ \hline
+1220 &  0.677 & 0.663& 0.707& 0.415\\ \hline
+1240 &  0.835 & 0.798 &0.860 & 0.662\\ \hline
+1260 &  0.997 & 0.956& 1.042& 1.043\\ \hline
+1280 &  1.185 & 1.139& 1.257&  1.622\\ \hline
+1300 &  1.388 & 1.354&  1.509& 2.485\\ \hline
+1320 &  1.681 & 1.601&   1.804& 3.753\\ \hline
+1340 &  2.008 & 1.886&   2.146& 5.583\\ \hline
+1360 &  2.392 & 2.212&   2.542& 8.183\\ \hline
+1380 &  2.795 & 2.585&  2.995& 11.821\\ \hline
+1400 &  3.291 & 3.006&  3.512& 16.838\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[!h]
+\label{T:equipos}
+\begin{center}
+\begin{tabular}{| c | c | c | c | c | c | c|}
+\hline
+\textbf{Strike} & \multicolumn{4}{ c |}{\textbf{T  = 0.56164}}  \\ 
+\cline{2-5}
+& \textbf{True} & \textbf{Approx1} & \textbf{Approx2} & \textbf{Approx3}  \\
+\hline
+
+1200 &  1.041 & 0.711& 0.741 & 0.435\\ \hline
+1220 &  1.250 & 0.851& 0.894& 0.661\\ \hline
+1240 &  1.489 & 1.013 &1.075 & 0.994\\ \hline
+1260 &  1.742 & 1.203& 1.287& 1.477\\ \hline
+1280 &  2.023 & 1.423& 1.536&  2.170\\ \hline
+1300 &  2.339 & 1.676&  1.824& 3.149\\ \hline
+1320 &  2.741 & 1.967&   2.158& 4.513\\ \hline
+1340 &  3.178 & 2.299&   2.541& 6.388\\ \hline
+1360 &  3.687 & 2.677&   2.979& 8.932\\ \hline
+1380 &  4.241 & 3.104&  3.479& 12.337\\ \hline
+1400 &  4.861 & 3.585&  4.045& 16.839\\ \hline
+
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+%% References
+%%
+%% Following citation commands can be used in the body text:
+%% Usage of \cite is as follows:
+%%   \cite{key}         ==>>  [#]
+%%   \cite[chap. 2]{key} ==>> [#, chap. 2]
+%%
+
+%% References with bibTeX database:
+
+%\bibliographystyle{elsarticle-num}
+% \bibliographystyle{elsarticle-harv}
+% \bibliographystyle{elsarticle-num-names}
+% \bibliographystyle{model1a-num-names}
+% \bibliographystyle{model1b-num-names}
+% \bibliographystyle{model1c-num-names}
+% \bibliographystyle{model1-num-names}
+% \bibliographystyle{model2-names}
+% \bibliographystyle{model3a-num-names}
+% \bibliographystyle{model3-num-names}
+% \bibliographystyle{model4-names}
+% \bibliographystyle{model5-names}
+% \bibliographystyle{model6-num-names}
+
+%\bibliography{sample}
+
+
+\end{document}
+
+%%
+%% End of file `elsarticle-template-num.tex'.
